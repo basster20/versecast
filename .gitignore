@@ -1,0 +1,22 @@
+# Only the app and its design notes belong in the repository. Everything else
+# at the root is reverse-engineering material, personal documents or runtime
+# junk — never publish those.
+/*
+!/.gitignore
+!/verse
+!/design
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Downloaded models, logs and runtime state
+*.log
+models/
+
+# OS / editor noise
+Thumbs.db
+Desktop.ini
+.DS_Store

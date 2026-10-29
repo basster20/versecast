@@ -1,0 +1,14 @@
+pywebview>=5.0
+psutil>=5.9
+# Local (offline) transcription
+faster-whisper>=1.1
+vosk>=0.3.45
+sounddevice>=0.4.6
+# Offline detection: one query embedding plus a flat scan of the verse matrix.
+# numpy is already pulled in by faster-whisper, but it is load-bearing here.
+onnxruntime>=1.20
+tokenizers>=0.21
+numpy>=2.0
+# NDI output: the sender bindings, plus Windows Graphics Capture for frames
+ndi-python>=6.0
+windows-capture>=1.2

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Verse — Output</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+  #root {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  /* fill the window at 16:9 without distorting */
+  #root .slide {
+    width: min(100vw, calc(100vh * 16 / 9));
+    height: min(100vh, calc(100vw * 9 / 16));
+    aspect-ratio: auto;
+    padding: 5vh 6vw;
+  }
+  .idle {
+    color: #2a2929;
+    font: 600 15px/1.4 "Segoe UI", system-ui, sans-serif;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    user-select: none;
+  }
+</style>
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <div id="root"><div class="idle">No signal</div></div>
+<script>
+  const root = document.getElementById("root");
+
+  function show(payload) {
+    if (!payload || payload.black) {
+      root.innerHTML = '<div class="idle">No signal</div>';
+      return;
+    }
+    root.innerHTML = payload.html || '<div class="idle">No signal</div>';
+  }
+
+  addEventListener("message", (e) => {
+    const data = e.data || {};
+    if (data.type === "render") show({ html: data.html });
+    if (data.type === "black") show({ black: true });
+  });
+
+  // Sync without a pop-up handle: the operator window mirrors every change here.
+  function fromStorage() {
+    try {
+      const raw = localStorage.getItem("verse.output");
+      if (raw) show(JSON.parse(raw));
+    } catch (err) { /* ignore */ }
+  }
+  fromStorage();
+  addEventListener("storage", (e) => {
+    if (e.key === "verse.output") fromStorage();
+  });
+
+  // Tell the operator window we are ready for a slide.
+  if (window.opener) {
+    try { window.opener.postMessage({ type: "output-ready" }, "*"); } catch (err) {}
+  }
+
+  addEventListener("keydown", (e) => {
+    if (e.key === "Escape") window.close();
+  });
+</script>
+</body>
+</html>
